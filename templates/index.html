@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            background-color: #f1f0f0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background-color: #d5e8d4;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: #bdd3ff;
+        }
+
+        .message p {
+            margin: 0;
+        }
+
+        .options {
+            margin-top: 10px;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .options input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .options input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Chatbot!</h1>
+        <div class="chat">
+            {% if response %}
+                <div class="message bot-message">
+                    <p>{{ response }}</p>
+                </div>
+            {% endif %}
+            <form action="/api/chatbot" method="post">
+                <div class="message user-message">
+                    <input type="text" id="message" name="message" placeholder="Type your message...">
+                </div>
+                <div class="options">
+                    <input type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+        {% if matched_questions %}
+            <div class="options">
+                <p>Select a similar question:</p>
+                <form id="question-form" action="/api/chatbot" method="get">
+                    {% for question in matched_questions %}
+                        <label>
+                            <input type="radio" name="question_key" value="{{ question.key }}" onclick="this.form.submit()"> {{ question.question }}<br>
+                        </label>
+                    {% endfor %}
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
